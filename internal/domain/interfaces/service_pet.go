@@ -1,0 +1,14 @@
+package interfaces
+
+import (
+	"context"
+
+	"pets/internal/domain/entities"
+
+)
+
+type IPetService interface {
+	ListPets(ctx context.Context) (*[]entities.Pet, error)
+	CreatePet(ctx context.Context, pet *entities.Pet) error
+	UpdatePet(ctx context.Context, id string, pet *entities.Pet) error
+}

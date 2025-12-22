@@ -1,0 +1,9 @@
+server:
+  port: ":8080"
+
+db_config:
+  db_host: "localhost"
+  db_port: "1433"
+  db_user: "sa"
+  db_password: "Dockersql2022"
+  db_name: "PETS_DB"
