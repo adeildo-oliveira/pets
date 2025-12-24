@@ -3,12 +3,14 @@ package http
 import (
 	"encoding/json"
 	"net/http"
-
-	"pets/internal/domain"
-	"pets/internal/domain/interfaces"
-	"pets/internal/models"
+	"strconv"
 
 	"github.com/go-chi/chi/v5"
+
+	"pets/internal/domain"
+	"pets/internal/domain/entities"
+	"pets/internal/domain/interfaces"
+	"pets/internal/models"
 )
 
 type ClientHandler struct {
@@ -30,7 +32,7 @@ func (h *ClientHandler) List(w http.ResponseWriter, r *http.Request) {
 	}
 
 	response := domain.Response{
-		Data: models.Map(petsService, models.NewPetResponse),
+		Data: entities.MapToListPetsResponse(petsService),
 	}
 
 	response.WriteJSON(w, http.StatusOK)
@@ -46,7 +48,7 @@ func (h *ClientHandler) Create(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	petEntity := models.ToPetEntity(&petRequest)
+	petEntity := entities.ToPetEntity(&petRequest)
 	err = h.petService.CreatePet(r.Context(), petEntity)
 	if err != nil {
 		response := domain.Response{}
@@ -73,8 +75,16 @@ func (h *ClientHandler) Update(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	petEntity := models.ToPetEntity(&petRequest)
-	err = h.petService.UpdatePet(r.Context(), petId, petEntity)
+	petEntity := entities.ToPetEntity(&petRequest)
+
+	id, err := strconv.ParseInt(petId, 10, 64)
+	if err != nil {
+		response := domain.Response{}
+		response.WriteError(w, http.StatusBadRequest, "invalid request payload")
+		return
+	}
+
+	err = h.petService.UpdatePet(r.Context(), id, petEntity)
 
 	if err != nil {
 		response := domain.Response{}

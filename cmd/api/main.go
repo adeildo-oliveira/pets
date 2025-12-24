@@ -17,9 +17,9 @@ func main() {
 		fx.Provide(
 			NewLogger,
 			config.LoadConfig,
-			http.NewHTTPServer,
-			http.NewRouter,
 			http.NewClientHandler,
+			http.NewRouter,
+			http.NewHTTPServer,
 		),
 		fx.Provide(
 			fx.Annotate(repository.NewPetDb, fx.As(new(interfaces.ISqlDB))),

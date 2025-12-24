@@ -2,7 +2,7 @@ package http
 
 import (
 	"context"
-	"net/http"
+	lib "net/http"
 
 	"github.com/go-chi/chi/v5"
 	"go.uber.org/fx"
@@ -11,14 +11,14 @@ import (
 	"pets/internal/config"
 )
 
-func NewHTTPServer(router *chi.Mux, cfg *config.Server) *http.Server {
-	return &http.Server{
+func NewHTTPServer(router *chi.Mux, cfg *config.Server) *lib.Server {
+	return &lib.Server{
 		Addr:    cfg.Config.ServerPort,
 		Handler: router,
 	}
 }
 
-func StartServer(lc fx.Lifecycle, server *http.Server, logger *zap.Logger) {
+func StartServer(lc fx.Lifecycle, server *lib.Server, logger *zap.Logger) {
 	lc.Append(fx.Hook{
 		OnStart: func(ctx context.Context) error {
 			logger.Info("server started", zap.String("addr", server.Addr))

@@ -3,8 +3,6 @@ package models
 import (
 	"time"
 
-	"pets/internal/domain/entities"
-
 )
 
 type CreatePet struct {
@@ -12,16 +10,6 @@ type CreatePet struct {
 	Age      int    `json:"age" binding:"required,gte=15"`
 	Breed    string `json:"breed" binding:"required"`
 	NickName string `json:"nickName" binding:"required"`
-}
-
-func ToPetEntity(createPet *CreatePet) *entities.Pet {
-	return &entities.Pet{
-		Name:     createPet.Name,
-		Age:      createPet.Age,
-		Breed:    createPet.Breed,
-		NickName: createPet.NickName,
-		Status:   true,
-	}
 }
 
 type CreateVacina struct {

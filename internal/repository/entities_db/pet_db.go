@@ -5,7 +5,7 @@ import (
 )
 
 type PetDB struct {
-	ID         string         `db:"id"`
+	ID         int64          `db:"id"`
 	Name       string         `db:"name_pet"`
 	Age        int            `db:"age_pet"`
 	Breed      string         `db:"breed_pet"`

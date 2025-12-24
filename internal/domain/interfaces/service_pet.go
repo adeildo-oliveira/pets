@@ -8,7 +8,7 @@ import (
 )
 
 type IPetService interface {
-	ListPets(ctx context.Context) (*[]entities.Pet, error)
+	ListPets(ctx context.Context) ([]entities.Pet, error)
 	CreatePet(ctx context.Context, pet *entities.Pet) error
-	UpdatePet(ctx context.Context, id string, pet *entities.Pet) error
+	UpdatePet(ctx context.Context, id int64, pet *entities.Pet) error
 }

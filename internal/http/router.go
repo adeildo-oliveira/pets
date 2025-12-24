@@ -3,6 +3,7 @@ package http
 import (
 	"github.com/go-chi/chi/v5"
 	"go.uber.org/zap"
+
 )
 
 func NewRouter(clientHandler *ClientHandler, logger *zap.Logger) *chi.Mux {

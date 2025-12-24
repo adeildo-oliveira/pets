@@ -3,12 +3,13 @@ package entities
 import (
 	"time"
 
+	"pets/internal/models"
 	entitiesdb "pets/internal/repository/entities_db"
 	"pets/internal/utils"
 )
 
 type Pet struct {
-	ID         string
+	ID         int64
 	Name       string
 	Age        int
 	Breed      string
@@ -18,27 +19,17 @@ type Pet struct {
 	DateUpdate time.Time
 }
 
-func NewPet(entitiesdb *entitiesdb.PetDB) *Pet {
+func NewPet(id int64, name string, age int, breed string, nickName string, status bool) *Pet {
 	return &Pet{
-		ID:         entitiesdb.ID,
-		Name:       entitiesdb.Name,
-		Age:        entitiesdb.Age,
-		Breed:      entitiesdb.Breed,
-		NickName:   utils.NullStringToString(entitiesdb.NickName),
-		Status:     entitiesdb.Status,
-		DateCreate: utils.NullTimeToTime(entitiesdb.DateCreate),
-		DateUpdate: utils.NullTimeToTime(entitiesdb.DateUpdate),
+		ID:         id,
+		Name:       name,
+		Age:        age,
+		Breed:      breed,
+		NickName:   utils.NullStringToString(utils.NullStringToSql(nickName)),
+		Status:     status,
+		DateCreate: time.Now(),
+		DateUpdate: time.Now(),
 	}
-}
-
-func ToPets(entitiesdbs *[]entitiesdb.PetDB) *[]Pet {
-	pets := make([]Pet, len(*entitiesdbs))
-
-	for i, entitiesdb := range *entitiesdbs {
-		pets[i] = *NewPet(&entitiesdb)
-	}
-
-	return &pets
 }
 
 func ToPetDB(pet *Pet) *entitiesdb.PetDB {
@@ -52,4 +43,35 @@ func ToPetDB(pet *Pet) *entitiesdb.PetDB {
 		DateCreate: utils.NullTimeToSql(pet.DateCreate),
 		DateUpdate: utils.NullTimeToSql(pet.DateUpdate),
 	}
+}
+
+func ToPetEntity(createPet *models.CreatePet) *Pet {
+	return NewPet(0, createPet.Name, createPet.Age, createPet.Breed, createPet.NickName, true)
+}
+
+func MapToListPets(petsDb []entitiesdb.PetDB) []Pet {
+	pets := make([]Pet, len(petsDb))
+	for i, petDb := range petsDb {
+		pets[i] = *NewPet(petDb.ID, petDb.Name, petDb.Age, petDb.Breed, utils.NullStringToString(petDb.NickName), petDb.Status)
+	}
+	return pets
+}
+
+func (p *Pet) ToPetResponse() *models.PetResponse {
+	return &models.PetResponse{
+		ID:       p.ID,
+		Name:     p.Name,
+		Age:      p.Age,
+		Breed:    p.Breed,
+		NickName: p.NickName,
+		Status:   p.Status,
+	}
+}
+
+func MapToListPetsResponse(pets []Pet) []models.PetResponse {
+	petsResponse := make([]models.PetResponse, len(pets))
+	for i, pet := range pets {
+		petsResponse[i] = *pet.ToPetResponse()
+	}
+	return petsResponse
 }

@@ -21,7 +21,7 @@ func NewPetRepository(db interfaces.ISqlDB, logger *zap.Logger) interfaces.IPetR
 	}
 }
 
-func (r *petRepository) ListPets(ctx context.Context) (*[]entitiesdb.PetDB, error) {
+func (r *petRepository) ListPets(ctx context.Context) ([]entitiesdb.PetDB, error) {
 	db, err := r.db.GetSqlConnection(ctx)
 
 	if err != nil {
@@ -36,7 +36,7 @@ func (r *petRepository) ListPets(ctx context.Context) (*[]entitiesdb.PetDB, erro
 		r.logger.Error("Error while selecting pets", zap.Error(err))
 		return nil, err
 	}
-	return &pets, nil
+	return pets, nil
 }
 
 func (r *petRepository) CreatePet(ctx context.Context, pet *entitiesdb.PetDB) error {
