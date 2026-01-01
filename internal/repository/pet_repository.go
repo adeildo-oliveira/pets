@@ -80,3 +80,17 @@ func (r *petRepository) UpdatePet(ctx context.Context, pet *entitiesdb.PetDB) er
 	}
 	return nil
 }
+
+func (r *petRepository) DeletePet(ctx context.Context, id int64) error {
+	db, err := r.db.GetSqlConnection(ctx)
+	if err != nil {
+		r.logger.Error("Error while get connection pets", zap.Error(err))
+		return err
+	}
+	_, err = db.Exec(deletePetQuery, id)
+	if err != nil {
+		r.logger.Error("Error while deleting pet", zap.Error(err))
+		return err
+	}
+	return nil
+}

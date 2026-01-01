@@ -32,7 +32,7 @@ func (h *ClientHandler) List(w http.ResponseWriter, r *http.Request) {
 	}
 
 	response := domain.Response{
-		Data: entities.MapToListPetsResponse(petsService),
+		Data: entities.MapToListPetResponse(petsService),
 	}
 
 	response.WriteJSON(w, http.StatusOK)
@@ -48,7 +48,7 @@ func (h *ClientHandler) Create(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	petEntity := entities.ToPetEntity(&petRequest)
+	petEntity := entities.MapModelToPetEntity(&petRequest)
 	err = h.petService.CreatePet(r.Context(), petEntity)
 	if err != nil {
 		response := domain.Response{}
@@ -75,7 +75,7 @@ func (h *ClientHandler) Update(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	petEntity := entities.ToPetEntity(&petRequest)
+	petEntity := entities.MapModelToPetEntity(&petRequest)
 
 	id, err := strconv.ParseInt(petId, 10, 64)
 	if err != nil {
@@ -94,6 +94,29 @@ func (h *ClientHandler) Update(w http.ResponseWriter, r *http.Request) {
 
 	response := domain.Response{
 		Data: "pet updated successfully",
+	}
+	response.WriteJSON(w, http.StatusOK)
+}
+
+func (h *ClientHandler) Delete(w http.ResponseWriter, r *http.Request) {
+	petId := chi.URLParam(r, "id")
+
+	id, err := strconv.ParseInt(petId, 10, 64)
+	if err != nil {
+		response := domain.Response{}
+		response.WriteError(w, http.StatusBadRequest, "invalid request payload")
+		return
+	}
+
+	err = h.petService.DeletePet(r.Context(), id)
+	if err != nil {
+		response := domain.Response{}
+		response.WriteError(w, http.StatusInternalServerError, "erro ao deletar pet")
+		return
+	}
+
+	response := domain.Response{
+		Data: "pet deleted successfully",
 	}
 	response.WriteJSON(w, http.StatusOK)
 }

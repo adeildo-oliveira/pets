@@ -3,7 +3,6 @@ package http
 import (
 	"github.com/go-chi/chi/v5"
 	"go.uber.org/zap"
-
 )
 
 func NewRouter(clientHandler *ClientHandler, logger *zap.Logger) *chi.Mux {
@@ -23,5 +22,6 @@ func clientRouter(clientHandler *ClientHandler) *chi.Mux {
 	r.Get("/", clientHandler.List)
 	r.Post("/create", clientHandler.Create)
 	r.Put("/update/{id}", clientHandler.Update)
+	r.Delete("/delete/{id}", clientHandler.Delete)
 	return r
 }

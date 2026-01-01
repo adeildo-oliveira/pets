@@ -6,6 +6,7 @@ import (
 	"pets/internal/models"
 	entitiesdb "pets/internal/repository/entities_db"
 	"pets/internal/utils"
+
 )
 
 type Pet struct {
@@ -32,7 +33,7 @@ func NewPet(id int64, name string, age int, breed string, nickName string, statu
 	}
 }
 
-func ToPetDB(pet *Pet) *entitiesdb.PetDB {
+func MapToPetDB(pet *Pet) *entitiesdb.PetDB {
 	return &entitiesdb.PetDB{
 		ID:         pet.ID,
 		Name:       pet.Name,
@@ -45,11 +46,11 @@ func ToPetDB(pet *Pet) *entitiesdb.PetDB {
 	}
 }
 
-func ToPetEntity(createPet *models.CreatePet) *Pet {
+func MapModelToPetEntity(createPet *models.CreatePet) *Pet {
 	return NewPet(0, createPet.Name, createPet.Age, createPet.Breed, createPet.NickName, true)
 }
 
-func MapToListPets(petsDb []entitiesdb.PetDB) []Pet {
+func MapToListEntityPet(petsDb []entitiesdb.PetDB) []Pet {
 	pets := make([]Pet, len(petsDb))
 	for i, petDb := range petsDb {
 		pets[i] = *NewPet(petDb.ID, petDb.Name, petDb.Age, petDb.Breed, utils.NullStringToString(petDb.NickName), petDb.Status)
@@ -57,7 +58,7 @@ func MapToListPets(petsDb []entitiesdb.PetDB) []Pet {
 	return pets
 }
 
-func (p *Pet) ToPetResponse() *models.PetResponse {
+func (p *Pet) MapToPetResponse() *models.PetResponse {
 	return &models.PetResponse{
 		ID:       p.ID,
 		Name:     p.Name,
@@ -68,10 +69,10 @@ func (p *Pet) ToPetResponse() *models.PetResponse {
 	}
 }
 
-func MapToListPetsResponse(pets []Pet) []models.PetResponse {
+func MapToListPetResponse(pets []Pet) []models.PetResponse {
 	petsResponse := make([]models.PetResponse, len(pets))
 	for i, pet := range pets {
-		petsResponse[i] = *pet.ToPetResponse()
+		petsResponse[i] = *pet.MapToPetResponse()
 	}
 	return petsResponse
 }

@@ -10,4 +10,5 @@ const (
 										nick_name_pet = :nick_name_pet,
 										date_update_pet = :date_update_pet 
 						WHERE id = :id`
+	deletePetQuery = `UPDATE PETS SET STATUS_PET = 0 WHERE id = $1`
 )
