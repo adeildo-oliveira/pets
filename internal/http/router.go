@@ -5,23 +5,31 @@ import (
 	"go.uber.org/zap"
 )
 
-func NewRouter(clientHandler *ClientHandler, logger *zap.Logger) *chi.Mux {
+func NewRouter(petHandler *PetHandler, vaccineHandler *VaccineHandler, logger *zap.Logger) *chi.Mux {
 	r := chi.NewRouter()
 
 	r.Use(ZapMiddleware(logger))
 
 	r.Route("/api", func(r chi.Router) {
-		r.Mount("/pets", clientRouter(clientHandler))
+		r.Mount("/pets", PetRouter(petHandler))
+		r.Mount("/vaccines", VaccineRouter(vaccineHandler))
 	})
 
 	return r
 }
 
-func clientRouter(clientHandler *ClientHandler) *chi.Mux {
+func PetRouter(PetHandler *PetHandler) *chi.Mux {
 	r := chi.NewRouter()
-	r.Get("/", clientHandler.List)
-	r.Post("/create", clientHandler.Create)
-	r.Put("/update/{id}", clientHandler.Update)
-	r.Delete("/delete/{id}", clientHandler.Delete)
+	r.Get("/", PetHandler.List)
+	r.Post("/create", PetHandler.Create)
+	r.Put("/update/{id}", PetHandler.Update)
+	r.Delete("/delete/{id}", PetHandler.Delete)
+	return r
+}
+
+func VaccineRouter(VaccineHandler *VaccineHandler) *chi.Mux {
+	r := chi.NewRouter()
+	r.Get("/", VaccineHandler.List)
+	r.Post("/create", VaccineHandler.Create)
 	return r
 }

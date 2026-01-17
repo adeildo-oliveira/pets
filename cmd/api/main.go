@@ -17,14 +17,17 @@ func main() {
 		fx.Provide(
 			NewLogger,
 			config.LoadConfig,
-			http.NewClientHandler,
+			http.NewPetHandler,
+			http.NewVaccineHandler,
 			http.NewRouter,
 			http.NewHTTPServer,
 		),
 		fx.Provide(
 			fx.Annotate(repository.NewPetDb, fx.As(new(interfaces.ISqlDB))),
 			fx.Annotate(repository.NewPetRepository, fx.As(new(interfaces.IPetRepository))),
+			fx.Annotate(repository.NewVaccineRepository, fx.As(new(interfaces.IVaccineRepository))),
 			fx.Annotate(services.NewPetService, fx.As(new(interfaces.IPetService))),
+			fx.Annotate(services.NewVaccineService, fx.As(new(interfaces.IVaccineService))),
 		),
 		fx.Invoke(http.StartServer),
 	)

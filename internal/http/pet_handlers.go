@@ -13,16 +13,16 @@ import (
 	"pets/internal/models"
 )
 
-type ClientHandler struct {
+type PetHandler struct {
 	petService interfaces.IPetService
 }
 
-func NewClientHandler(petService interfaces.IPetService) *ClientHandler {
-	return &ClientHandler{
+func NewPetHandler(petService interfaces.IPetService) *PetHandler {
+	return &PetHandler{
 		petService: petService,
 	}
 }
-func (h *ClientHandler) List(w http.ResponseWriter, r *http.Request) {
+func (h *PetHandler) List(w http.ResponseWriter, r *http.Request) {
 	petsService, err := h.petService.ListPets(r.Context())
 
 	if err != nil {
@@ -38,7 +38,7 @@ func (h *ClientHandler) List(w http.ResponseWriter, r *http.Request) {
 	response.WriteJSON(w, http.StatusOK)
 }
 
-func (h *ClientHandler) Create(w http.ResponseWriter, r *http.Request) {
+func (h *PetHandler) Create(w http.ResponseWriter, r *http.Request) {
 	var petRequest models.CreatePet
 
 	err := json.NewDecoder(r.Body).Decode(&petRequest)
@@ -63,7 +63,7 @@ func (h *ClientHandler) Create(w http.ResponseWriter, r *http.Request) {
 	response.WriteJSON(w, http.StatusCreated)
 }
 
-func (h *ClientHandler) Update(w http.ResponseWriter, r *http.Request) {
+func (h *PetHandler) Update(w http.ResponseWriter, r *http.Request) {
 	var petRequest models.CreatePet
 	petId := chi.URLParam(r, "id")
 
@@ -98,7 +98,7 @@ func (h *ClientHandler) Update(w http.ResponseWriter, r *http.Request) {
 	response.WriteJSON(w, http.StatusOK)
 }
 
-func (h *ClientHandler) Delete(w http.ResponseWriter, r *http.Request) {
+func (h *PetHandler) Delete(w http.ResponseWriter, r *http.Request) {
 	petId := chi.URLParam(r, "id")
 
 	id, err := strconv.ParseInt(petId, 10, 64)

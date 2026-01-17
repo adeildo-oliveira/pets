@@ -2,7 +2,6 @@ package models
 
 import (
 	"time"
-
 )
 
 type CreatePet struct {
@@ -12,10 +11,11 @@ type CreatePet struct {
 	NickName string `json:"nickName" binding:"required"`
 }
 
-type CreateVacina struct {
+type CreateVaccine struct {
 	Name      string    `json:"nome" binding:"required"`
-	DateGiven time.Time `json:"data_aplicacao" binding:"required,datetime=2006-01-02 15:00:00"`
-	NextDue   time.Time `json:"proxima_dose" binding:"required,datetime=2006-01-02 15:00:00"`
+	DateGiven time.Time `json:"dataAplicacao" binding:"required,datetime=2006-01-02 15:00:00"`
+	NextDue   time.Time `json:"proximaDose" binding:"required,datetime=2006-01-02 15:00:00"`
+	IdPet     int64     `json:"idPet" binding:"required"`
 }
 
 type CreateConsulta struct {

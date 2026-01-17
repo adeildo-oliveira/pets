@@ -12,3 +12,8 @@ type IPetService interface {
 	UpdatePet(ctx context.Context, id int64, pet *entities.Pet) error
 	DeletePet(ctx context.Context, id int64) error
 }
+
+type IVaccineService interface {
+	ListVaccines(ctx context.Context) ([]entities.Vaccine, error)
+	CreateVaccine(ctx context.Context, vaccine *entities.Vaccine) error
+}
